@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.toy.live.mapper.MemberMapper">
 	
-	<insert id="createMember">
+	<insert id="create">
 		INSERT INTO
 			member(name, password)
 		VALUES
 			(#{name}, #{password})
 	</insert>
 	
-    <select id="getMemberList" resultType="com.toy.live.dto.MemberDto">
+    <select id="findAll" resultType="com.toy.live.domain.Member">
         SELECT
                 id
              ,	name
@@ -19,5 +19,23 @@
         ORDER by
             id asc
     </select>
+    
+    <select id="findByName" resultType="com.toy.live.domain.Member">
+        SELECT
+                id
+             ,	name
+             ,	password
+        FROM
+            member
+        WHERE
+        	name = #{name}
+    </select>
+    
+    <delete id="delete">
+    	DELETE FROM
+    		member
+    	WHERE
+    		id = #{id}
+    </delete>
     
 </mapper>

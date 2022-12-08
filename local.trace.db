@@ -178,3 +178,16 @@ INSERT INTO
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2022-12-08 16:04:33 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user(\000d\000a    id bigint auto_increment primary key,\000d\000a    name varchar(255) not null unique,\000d\000a    password varchar(255) not null\000d\000a)"; expected "identifier"; SQL statement:
+create table user(
+    id bigint auto_increment primary key,
+    name varchar(255) not null unique,
+    password varchar(255) not null
+) [42001-214]
+2022-12-08 16:45:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "test"; SQL statement:
+DELETE FROM
+    		member
+    	WHERE
+    		name = ? [22018-214]
