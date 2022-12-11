@@ -34,7 +34,7 @@ public class MemberService {
 		this.memberMapper.create(member);
     }
     
-    public void delete(Long id) {
+    public void delete(int id) {
     	this.memberMapper.delete(id);
     }
 }

@@ -12,5 +12,5 @@ public interface MemberMapper {
     public List<Member> findAll();
     public void create(Member member);
     public Optional<Member> findByName(String name);
-    public void delete(Long id);
+    public void delete(int id);
 }

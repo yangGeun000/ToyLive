@@ -70,10 +70,6 @@ public class MemberController {
 	@GetMapping("/delete")
 	public String delete(Principal principal) {
 		Optional<Member> opMember = this.memberService.findByName(principal.getName());
-		if (opMember.isEmpty()) {
-        	log.error("사용자를 찾을 수 없습니다 => " + principal.getName());
-        	return "redirect:/";
-        }
 		Member member = opMember.get();
 		try {
 			this.memberService.delete(member.getId());

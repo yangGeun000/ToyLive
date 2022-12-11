@@ -1,0 +1,19 @@
+<html layout:decorate="~{layout}">
+
+<th:block layout:fragment="content">
+
+<th:block th:each="room : ${roomList}">
+	<div class="card" style="width: 18rem;">
+		<img src="..." class="card-img-top" alt="...">
+		<div class="card-body">
+			<h5 class="card-title">[[${room.subject}]]</h5>
+			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+				content.</p>
+			<a th:href="|/room/{room.streamer}|" class="btn btn-primary">방송보기</a>
+		</div>
+	</div>
+</th:block>
+
+</th:block>
+
+</html>
