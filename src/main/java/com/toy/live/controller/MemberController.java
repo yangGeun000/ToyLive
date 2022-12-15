@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.toy.live.domain.Member;
-import com.toy.live.form.MemberCreateForm;
+import com.toy.live.dto.MemberCreateDto;
 import com.toy.live.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,24 +34,24 @@ public class MemberController {
 	}
 	
 	@GetMapping("/sign-up")
-	public String signUp(MemberCreateForm memberCreateForm) {
+	public String signUp(MemberCreateDto memberCreateDto) {
 		return "sign-up";
 	}
 	
 	@PostMapping("/sign-up") // 회원가입 요청
-    public String signUp(@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult) {
+    public String signUp(@Valid MemberCreateDto memberCreateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "sign-up";
         }
 
-        if (!memberCreateForm.getPassword1().equals(memberCreateForm.getPassword2())) {
+        if (!memberCreateDto.getPassword1().equals(memberCreateDto.getPassword2())) {
             bindingResult.rejectValue("password2", "passwordInCorrect", 
                     "패스워드가 일치하지 않습니다.");
             return "sign-up";
         }
         
         try {
-        	memberService.create(memberCreateForm);
+        	memberService.create(memberCreateDto);
         }
         catch(DataIntegrityViolationException e) { // name 중복에러
             e.printStackTrace();

@@ -2,33 +2,49 @@
 
 <th:block layout:fragment="content">
 
-        <div class="mb-3">
-            <label for="username" class="form-label">방송제목</label>
-            <input type="text" name="subject" id="subject" class="form-control">
-        </div>
-        <button id="start" type="button" class="btn btn-primary">방송시작</button>
-		<a href="/room/delete" class="btn btn-primary">방송종료</a>
-		<div id="room"></div>
-		<script>
-		window.onload = function(){
+	<div class="mb-3">
+		<label for="username" class="form-label">방송제목</label>
+		<input type="text" name="subject" id="subject" class="form-control">
+	</div>
+	<button id="start" type="button" class="btn btn-primary">방송시작</button>
+	<a href="/room/delete" class="btn btn-primary">방송종료</a>
+	<div id="room"></div>
+	<div id="sender">[[${#authentication.name}]]</div>
+	<div id="streamer">[[${#authentication.name}]]</div>	
+	<div id="chatView"></div>
+	<div class="mb-3">
+		<label for="msgContent" class="form-label">메세지</label>
+		<input type="text" id="msgContent" class="form-control">
+	</div>
+	<button type="button" class="btn btn-primary" onclick="sendMessage()">보내기</button>
+	 
+	
+	<script th:src="@{/js/sockjs.min.js}"></script>
+	<script th:src="@{/js/stomp.min.js}"></script>
+	<script th:src="@{/js/chat.js}"></script>
+	<script>
+		window.onload = function () {
 			createRoom();
 		}
 		let subject;
-		
-		function createRoom(){
+
+		function createRoom() {
 			let button = document.querySelector("#start");
-			button.addEventListener("click",function(){
+			button.addEventListener("click", function () {
 				subject = document.querySelector("#subject").value;
 				let msg = {
 					subject: subject
 				};
-				ajax("/room/create", msg, "post", function(result){
-					document.querySelector("#room").innerHTML=JSON.stringify(result);
+				ajax("/room/create", msg, "post", function (result) {
+					document.querySelector("#room").innerHTML = JSON.stringify(result);
+					connect();
 				})
 			})
 		}
 		
-		</script>
+		
+
+	</script>
 </th:block>
 
 </html>

@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.toy.live.domain.Member;
-import com.toy.live.form.MemberCreateForm;
+import com.toy.live.dto.MemberCreateDto;
 import com.toy.live.mapper.MemberMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -27,10 +27,10 @@ public class MemberService {
         return memberMapper.findByName(name);
     }
     
-    public void create(MemberCreateForm memberCreateForm) {
+    public void create(MemberCreateDto memberCreateDto) {
     	Member member = new Member();
-    	member.setName(memberCreateForm.getName());
-    	member.setPassword(passwordEncoder.encode(memberCreateForm.getPassword1()));
+    	member.setName(memberCreateDto.getName());
+    	member.setPassword(passwordEncoder.encode(memberCreateDto.getPassword1()));
 		this.memberMapper.create(member);
     }
     

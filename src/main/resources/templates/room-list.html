@@ -4,12 +4,12 @@
 
 <th:block th:each="room : ${roomList}">
 	<div class="card" style="width: 18rem;">
-		<img src="..." class="card-img-top" alt="...">
+		<img src="" class="card-img-top" alt="썸네일">
 		<div class="card-body">
 			<h5 class="card-title">[[${room.subject}]]</h5>
 			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
 				content.</p>
-			<a th:href="|/room/{room.streamer}|" class="btn btn-primary">방송보기</a>
+			<a th:href="|/room/${room.streamer}|" class="btn btn-primary">방송보기</a>
 		</div>
 	</div>
 </th:block>

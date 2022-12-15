@@ -1,4 +1,4 @@
-package com.toy.live.form;
+package com.toy.live.dto;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MemberCreateForm {
+public class MemberCreateDto {
 	
 	@NotEmpty(message = "사용자ID는 필수항목입니다.")
     private String name;

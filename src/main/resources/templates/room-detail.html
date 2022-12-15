@@ -2,8 +2,26 @@
 
 <th:block layout:fragment="content">
 
-	
+	<h2>[[${room.subject}]]</h2>
+	<div id="sender">[[${#authentication.name}]]</div>
+	<div id="streamer">[[${room.streamer}]]</div>
+	<div id="chatView"></div>
+	<div class="mb-3">
+		<label for="msgContent" class="form-label">메세지</label>
+		<input type="text" id="msgContent" class="form-control" sec:authorize="isAuthenticated()">
+		<input type="text" id="msgContent" class="form-control" sec:authorize="isAnonymous()" value="로그인을 해야 사용가능합니다" disabled>
+	</div>
+	<button type="button" class="btn btn-primary" onclick="sendMessage()" sec:authorize="isAuthenticated()">보내기</button>
 
+
+	<script th:src="@{/js/sockjs.min.js}"></script>
+	<script th:src="@{/js/stomp.min.js}"></script>
+	<script th:src="@{/js/chat.js}"></script>
+	<script>
+		window.onload = function () {
+			connect();
+		}
+	</script>
 </th:block>
 
 </html>
