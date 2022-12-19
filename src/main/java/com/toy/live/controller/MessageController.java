@@ -3,13 +3,13 @@ package com.toy.live.controller;
 import java.time.LocalDateTime;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.toy.live.dto.MessageDto;
@@ -42,11 +42,17 @@ public class MessageController {
 	}
 	
 	// 클라이언트가 보낸 메세지를 타겟에게 다시 보내기
-	@MessageMapping("/send")
-	public void send(MessageDto message) {
+	@MessageMapping("/send/{streamer}")
+	public void send(MessageDto message, @DestinationVariable String streamer) {
 		log.info("sendMessage : " + message.toString());
 		message.setSendDate(LocalDateTime.now());
-		template.convertAndSend("/sub/" + message.getStreamer(), message);
+		template.convertAndSend("/sub/" + streamer, message);
+	}
+	
+	@MessageMapping("/webrtc/{name}")
+	public void webrtc(@Payload String message, @DestinationVariable String name) {
+		log.info("sendMessage : " + message);
+		template.convertAndSend("/sub/webrtc/" + name, message);
 	}
 	
 	// 연걸이 끊기는 이벤트를 캐치

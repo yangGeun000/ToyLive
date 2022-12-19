@@ -3,6 +3,7 @@
 <th:block layout:fragment="content">
 
 	<h2>[[${room.subject}]]</h2>
+	<video id="remoteVideo" autoplay></video>
 	<div id="sender">[[${#authentication.name}]]</div>
 	<div id="streamer">[[${room.streamer}]]</div>
 	<div id="chatView"></div>
@@ -17,8 +18,10 @@
 	<script th:src="@{/js/sockjs.min.js}"></script>
 	<script th:src="@{/js/stomp.min.js}"></script>
 	<script th:src="@{/js/chat.js}"></script>
+	<script th:src="@{/js/webrtc-view.js}"></script>
 	<script>
 		window.onload = function () {
+			createPeer();
 			connect();
 		}
 	</script>

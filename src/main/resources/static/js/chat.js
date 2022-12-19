@@ -24,6 +24,7 @@ function onConnected() {
 	console.log(streamer);
 	console.log(sender);
 	stompClient.subscribe('/sub/' + streamer, onMessageReceived);
+	stompClient.subscribe('/sub/webrtc/' + sender, onSingnaling);
 	let msg = {
 		streamer: streamer,
 		sender: sender,
@@ -37,15 +38,23 @@ function onConnected() {
 function onMessageReceived(result) {
 	console.log("message received : " + result);
 	let msg = JSON.parse(result.body);
-	let color
-	if(streamer == msg.sender) color = "red";
-	else if(sender == msg.sender) color = "green";
+	let color;
 	let tag;
-	if (msg.type == "ENTER" || msg.type == "LEAVE") {
-		tag = `<div>${msg.content}</div>`;
-	}
-	else {
-		tag = `<div style="color:${color}">${msg.sender} : ${msg.content}[${msg.sendDate}]</div>`;
+	switch (msg.type) {
+		case "ENTER":
+			tag = `<div>${msg.content}</div>`;
+			if (streamer == sender && sender != msg.sender) createPeer(msg.sender);
+			break;
+		case "MESSAGE":
+			if (streamer == msg.sender) color = "red";
+			else if (sender == msg.sender) color = "green";
+			tag = `<div style="color:${color}">${msg.sender} : ${msg.content}[${msg.sendDate}]</div>`;
+			break;
+		case "LEAVE":
+			tag = `<div>${msg.content}</div>`;
+			break;
+		default:
+			break;
 	}
 	chatView.insertAdjacentHTML("beforeend", tag);
 }
@@ -56,13 +65,12 @@ function sendMessage() {
 
 	if (content.trim() && stompClient) {
 		let msg = {
-			streamer: streamer,
 			sender: sender,
 			content: content,
 			type: 'MESSAGE'
 		};
 
-		stompClient.send("/pub/send", {}, JSON.stringify(msg));
+		stompClient.send("/pub/send/" + streamer, {}, JSON.stringify(msg));
 		msgContent.value = '';
 	}
 
