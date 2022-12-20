@@ -10,9 +10,9 @@
 	<div class="d-flex">
 		<video id="remoteVideo" autoplay controls></video>
 		<div id="chat">
-			<label for="msgContent" class="form-label">채팅창</label>
+			<button type="button" class="btn btn-primary w-100">채팅창</button>
 			<div class="d-flex" style="height: 80%;">
-				<div id="chatView" class="border"></div>
+				<div id="chatView" class="border w-100"></div>
 			</div>
 			<div class="input-group mb-3">
 				<input type="text" id="msgContent" class="form-control" sec:authorize="isAuthenticated()">
@@ -23,7 +23,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="streamer">[[${room.streamer}]]</div>
+	<div id="streamer" class="d-none">[[${room.streamer}]]</div>
 
 	<script th:src="@{/js/sockjs.min.js}"></script>
 	<script th:src="@{/js/stomp.min.js}"></script>

@@ -14,10 +14,13 @@
 	<div class="d-flex">
 		<video id="localVideo" autoplay muted></video>
 		<div id="chat">
-			<label for="msgContent" class="form-label">채팅창</label>
+			<div class="d-flex">
+				<button type="button" class="btn btn-primary w-75">채팅창</button>
+				<button type="button" class="btn btn-dark w-25">시청자</button>
+			</div>
 			<div class="d-flex" style="height: 80%;">
-				<div id="chatView" class="border"></div>
-				<div id="viewList" class="border"></div>
+				<div id="chatView" class="border w-75"></div>
+				<div id="viewList" class="bg-dark w-25 text-end" style="color: black;"></div>
 			</div>
 			<div class="input-group mb-3">
 				<input type="text" id="msgContent" class="form-control">

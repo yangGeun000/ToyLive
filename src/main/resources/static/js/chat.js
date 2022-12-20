@@ -39,22 +39,34 @@ function onConnected() {
 function onMessageReceived(result) {
 	console.log("message received : " + result);
 	let msg = JSON.parse(result.body);
-	let color;
+	let color = "black";
 	let tag;
 	switch (msg.type) {
 		case "ENTER":
-			tag = `<div style="width:100%;">${msg.content}</div>`;
+			tag = `<div class="badge bg-warning text-white text-wrap text-break w-100">
+						${msg.content}
+					</div>`;
 			if (streamer == sender && sender != msg.sender) createPeer(msg.sender);
 			if (streamer == sender) getViewList();
 			break;
 		case "MESSAGE":
 			if (streamer == msg.sender) color = "red";
 			else if (sender == msg.sender) color = "green";
-			tag = `<div style="width:100%; color:${color}">${msg.sender} : ${msg.content}[${msg.sendDate}]</div>`;
+			tag = `<div class="badge text-wrap text-break text-start w-100" style="color:${color}">
+						${msg.sender} : ${msg.content}
+						<br> 
+						<span>[${msg.sendDate}]</span>
+					</div>`;
 			break;
 		case "LEAVE":
-			tag = `<div style="width:100%;">${msg.content}</div>`;
-			if (streamer == sender) getViewList();
+			tag = `<div class="badge bg-warning text-white text-wrap text-break w-100">
+						${msg.content}
+					</div>`;
+			if (streamer == sender) {
+				getViewList();
+				pc.get(msg.sender).close();
+				pc.delete(msg.sender);
+			}
 			if (streamer == msg.sender) {
 				stompClient.disconnect();
 				socket.close();
@@ -93,12 +105,12 @@ function onError(error) {
 // 시청자 목록 받아오기
 function getViewList() {
 	ajax("/room/views/" + streamer, null, "get", function(result) {
-		let tag='';
+		let tag = '';
 		result.forEach((view) => {
-			tag += `<div>${view}</div>`;
+			tag += `<div class="m-2 badge bg-secondary bg-gradient text-wrap text-break d-block">${view}</div>`;
 		})
-			viewList.replaceChildren();
-			viewList.insertAdjacentHTML("beforeend", tag);
+		viewList.replaceChildren();
+		viewList.insertAdjacentHTML("beforeend", tag);
 
 	})
 }

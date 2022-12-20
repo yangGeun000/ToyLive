@@ -13,10 +13,8 @@ video {
 }
 
 #chatView{
-	width: 70%;
 	overflow-y: scroll;
 }
 #viewList{
-	width: 30%;
 	overflow-y: scroll;
 }

@@ -1,6 +1,6 @@
 let localVideo = document.querySelector('#localVideo');
 let localStream;
-let pc = new Map();
+var pc = new Map();
 const constraints = {
 	video: true, audio: true
 };
@@ -11,9 +11,12 @@ function getMedia() {
 			localVideo.srcObject = stream;
 			localStream = stream;
 			const [videoTrack] = stream.getVideoTracks();
+			const [audioTrack] = stream.getAudioTracks();
+			console.log(videoTrack);
+			console.log(audioTrack);
 			pc.forEach((peer) => {
-				const sender = peer.getSenders().find((s) => s.track.kind === videoTrack.kind);
-				sender.replaceTrack(videoTrack);
+				const vidioSender = peer.getSenders().find((s) => s.track.kind === videoTrack.kind);
+				vidioSender.replaceTrack(videoTrack);
 			});
 		})
 		.catch(function(err) {
@@ -55,21 +58,8 @@ function createPeer(target) {
 
 	let peerConnection = new RTCPeerConnection(configuration);
 	peerConnection.onconnectionstatechange = function(event) {
-		switch (peerConnection.connectionState) {
-			case "connected":
-				console.log("connected");
-				break;
-			case "disconnected":
-				console.log("disconnected");
-				peerConnection.close();
-				pc.delete(target);
-			case "failed":
-				console.log("failed");
-				break;
-			case "closed":
-				console.log("closed");
-				break;
-		}
+		console.log(event.currentTarget.connectionState);
+
 	}
 	localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 	peerConnection.onicecandidate = function(event) {
