@@ -4,6 +4,7 @@ let streamer;
 let sender;
 let msgContent;
 let chatView = document.querySelector("#chatView");
+let viewList = document.querySelector("#viewList");
 
 // 소켓연결
 function connect() {
@@ -42,16 +43,23 @@ function onMessageReceived(result) {
 	let tag;
 	switch (msg.type) {
 		case "ENTER":
-			tag = `<div>${msg.content}</div>`;
+			tag = `<div style="width:100%;">${msg.content}</div>`;
 			if (streamer == sender && sender != msg.sender) createPeer(msg.sender);
+			if (streamer == sender) getViewList();
 			break;
 		case "MESSAGE":
 			if (streamer == msg.sender) color = "red";
 			else if (sender == msg.sender) color = "green";
-			tag = `<div style="color:${color}">${msg.sender} : ${msg.content}[${msg.sendDate}]</div>`;
+			tag = `<div style="width:100%; color:${color}">${msg.sender} : ${msg.content}[${msg.sendDate}]</div>`;
 			break;
 		case "LEAVE":
-			tag = `<div>${msg.content}</div>`;
+			tag = `<div style="width:100%;">${msg.content}</div>`;
+			if (streamer == sender) getViewList();
+			if (streamer == msg.sender) {
+				stompClient.disconnect();
+				socket.close();
+				alert("방송이 종료되었습니다.");
+			}
 			break;
 		default:
 			break;
@@ -80,4 +88,17 @@ function sendMessage() {
 function onError(error) {
 	console.log("stompError : " + error);
 	stompClient.connect({}, onConnected, onError);
+}
+
+// 시청자 목록 받아오기
+function getViewList() {
+	ajax("/room/views/" + streamer, null, "get", function(result) {
+		let tag='';
+		result.forEach((view) => {
+			tag += `<div>${view}</div>`;
+		})
+			viewList.replaceChildren();
+			viewList.insertAdjacentHTML("beforeend", tag);
+
+	})
 }

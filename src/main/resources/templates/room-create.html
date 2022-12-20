@@ -6,48 +6,65 @@
 		<label for="username" class="form-label">방송제목</label>
 		<input type="text" name="subject" id="subject" class="form-control">
 	</div>
-	<video id="localVideo" autoplay mute></video>
-	<button id="start" type="button" class="btn btn-primary">방송시작</button>
-	<a href="/room/delete" class="btn btn-primary">방송종료</a>
-	<button id="changeMedia" type="button" class="btn btn-primary">화면선택</button>
-	<div id="room"></div>
-	<div id="sender">[[${#authentication.name}]]</div>
-	<div id="streamer">[[${#authentication.name}]]</div>	
-	<div id="chatView"></div>
-	<div class="mb-3">
-		<label for="msgContent" class="form-label">메세지</label>
-		<input type="text" id="msgContent" class="form-control">
+	<div class="btn-group" role="group" aria-label="Basic example">
+		<button id="start" type="button" class="btn btn-primary">방송시작</button>
+		<button id="changeMedia" type="button" class="btn btn-primary">화면선택</button>
+		<a id="end" href="/room/delete" class="btn btn-primary d-none">방송종료</a>
 	</div>
-	<button type="button" class="btn btn-primary" onclick="sendMessage()">보내기</button>
-	 
-	
+	<div class="d-flex">
+		<video id="localVideo" autoplay muted></video>
+		<div id="chat">
+			<label for="msgContent" class="form-label">채팅창</label>
+			<div class="d-flex" style="height: 80%;">
+				<div id="chatView" class="border"></div>
+				<div id="viewList" class="border"></div>
+			</div>
+			<div class="input-group mb-3">
+				<input type="text" id="msgContent" class="form-control">
+				<button type="button" class="btn btn-primary" onclick="sendMessage()">보내기</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="sender" class="d-none">[[${#authentication.name}]]</div>
+	<div id="streamer" class="d-none">[[${#authentication.name}]]</div>
+
+
 	<script th:src="@{/js/sockjs.min.js}"></script>
 	<script th:src="@{/js/stomp.min.js}"></script>
 	<script th:src="@{/js/chat.js}"></script>
 	<script th:src="@{/js/webrtc-streamer.js}"></script>
 	<script>
+		let startBtn = document.querySelector("#start");
+		let endBtn = document.querySelector("#end");
+		let mediaBtn = document.querySelector("#changeMedia");
+
 		window.onload = function () {
-			createRoom();
-			//getMedia();
-			document.querySelector("#changeMedia").addEventListener("click",getMedia);
+			startBtn.addEventListener("click", createRoom);
+			mediaBtn.addEventListener("click", getMedia);
 		}
-		let subject;
 
 		function createRoom() {
-			let button = document.querySelector("#start");
-			button.addEventListener("click", function () {
-				subject = document.querySelector("#subject").value;
-				let msg = {
-					subject: subject
-				};
-				ajax("/room/create", msg, "post", function (result) {
-					document.querySelector("#room").innerHTML = JSON.stringify(result);
-					connect();
+			let subject = document.querySelector("#subject");
+			let msg = {
+				subject: subject.value
+			};
+			navigator.mediaDevices.getDisplayMedia(constraints).
+				then(function (stream) {
+					localVideo.srcObject = stream;
+					localStream = stream;
+					ajax("/room/create", msg, "post", function (result) {
+						subject.disabled = true;
+						startBtn.classList.add('d-none');
+						endBtn.classList.remove('d-none');
+						connect();
+					})
 				})
-			})
+				.catch(function (err) {
+					console.log("Media ERROR : " + err);
+					alert("화면을 공유해야 방송이 가능합니다.");
+				});
 		}
-		
-		
 
 	</script>
 </th:block>

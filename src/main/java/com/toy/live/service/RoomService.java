@@ -21,49 +21,59 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class RoomService {
 	// 현재 생성된 방들
-	private Map<String,Room> rooms;
-	
+	private Map<String, Room> rooms;
+
 	@PostConstruct
-    private void init() {
-        rooms = new LinkedHashMap<>();
-    }
-	
+	private void init() {
+		rooms = new LinkedHashMap<>();
+	}
+
 	// 방송중인 방 전부 조회
-    public List<Room> findAll() {
-    	List<Room> roomList = new ArrayList<>(rooms.values());
-    	// 최근순으로 정렬
-    	Collections.reverse(roomList);
-        return roomList;
-    }
-    
-    // 스트리머 기준 방 찾기
-    public Room findByStreamer(String streamer) {
-        return rooms.get(streamer);
-    }
-    
-    // 시청자가 입장하면 시청자수 증가하고 방 views에 멤버 추가
-    public String EnterRoom(String streamer, String memberName) {
-    	Room room = rooms.get(streamer);
-    	String memberUUID = UUID.randomUUID().toString();
-    	System.out.println(room.getViews().toString());
-    	room.getViews().put(memberUUID, memberName);
-    	room.setCount(room.getCount()+1);
-    	return memberUUID;
-    }
-    
-    // 시청자가 나가면 시청자수 감소하고 방 views에 멤버 삭제
-    public String LeaveRoom(String streamer, String memberUUID) {
-    	Room room = rooms.get(streamer);
-    	String memberName = streamer;
-    	if(room != null) {
-    	memberName = room.getViews().get(memberUUID);
-    	room.getViews().remove(memberUUID);
-    	room.setCount(room.getCount()-1);
-    	}
-    	return memberName;
-    }
-	
-    // 방 생성
+	public List<Room> findAll() {
+		List<Room> roomList = new ArrayList<>(rooms.values());
+		// 최근순으로 정렬
+		Collections.reverse(roomList);
+		return roomList;
+	}
+
+	// 스트리머 기준 방 찾기
+	public Room findByStreamer(String streamer) {
+		return rooms.get(streamer);
+	}
+
+	// 방의 시청자 리스트
+	public List<String> findRoomViews(String streamer) {
+		List<String> viewList = new ArrayList<>(rooms.get(streamer).getViews().values());
+		// 최근순으로 정렬
+		return viewList;
+	}
+
+	// 시청자가 입장하면 시청자수 증가하고 방 views에 멤버 추가
+	public String EnterRoom(String streamer, String memberName) {
+		Room room = rooms.get(streamer);
+		String memberUUID = UUID.randomUUID().toString();
+		room.getViews().put(memberUUID, memberName);
+		if (!streamer.equals(memberName)) {
+			room.setCount(room.getCount() + 1);
+		}
+		return memberUUID;
+	}
+
+	// 시청자가 나가면 시청자수 감소하고 방 views에 멤버 삭제
+	public String LeaveRoom(String streamer, String memberUUID) {
+		Room room = rooms.get(streamer);
+		String memberName = streamer;
+		if (room != null) {
+			memberName = room.getViews().get(memberUUID);
+			if (!memberName.equals(null)) {
+				room.getViews().remove(memberUUID);
+				room.setCount(room.getCount() - 1);
+			}
+		}
+		return memberName;
+	}
+
+	// 방 생성
 	public Room create(String subject, String streamer) {
 		Room room = new Room();
 		room.setStreamer(streamer);
@@ -73,7 +83,7 @@ public class RoomService {
 		rooms.put(streamer, room);
 		return room;
 	}
-	
+
 	// 방 삭제
 	public void delete(String streamer) {
 		rooms.remove(streamer);

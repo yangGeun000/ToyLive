@@ -13,7 +13,6 @@ function getMedia() {
 			const [videoTrack] = stream.getVideoTracks();
 			pc.forEach((peer) => {
 				const sender = peer.getSenders().find((s) => s.track.kind === videoTrack.kind);
-				console.log('Found sender:', sender);
 				sender.replaceTrack(videoTrack);
 			});
 		})

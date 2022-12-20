@@ -2,17 +2,22 @@
 
 <th:block layout:fragment="content">
 
-<th:block th:each="room : ${roomList}">
-	<div class="card" style="width: 18rem;">
-		<img src="" class="card-img-top" alt="썸네일">
-		<div class="card-body">
-			<h5 class="card-title">[[${room.subject}]]</h5>
-			<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-				content.</p>
-			<a th:href="|/room/${room.streamer}|" class="btn btn-primary">방송보기</a>
+	<th:block th:each="room : ${roomList}">
+		<div class="card" style="width: 18rem;">
+			<div class="card-header">
+				[[${room.streamer}]]
+			</div>
+			<img src="" class="card-img-top" alt="썸네일">
+			<div class="card-body">
+				<h5 class="card-title">[[${room.subject}]]</h5>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">시청자 : [[${room.count}]]명</li>
+					<li class="list-group-item">시작시간 : [[${#temporals.format(room.startDate,'dd일 HH:mm')}]]</li>
+				</ul>
+				<a th:href="|/room/${room.streamer}|" class="btn btn-primary">방송보기</a>
+			</div>
 		</div>
-	</div>
-</th:block>
+	</th:block>
 
 </th:block>
 

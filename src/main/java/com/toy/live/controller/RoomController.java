@@ -32,6 +32,13 @@ public class RoomController {
 		model.addAttribute("roomList", roomList);
 		return "room-list";
 	}
+	
+	@RequestMapping("/views/{streamer}")
+	@ResponseBody
+	public List<String> getRoomViews(@PathVariable String streamer) {
+		List<String> viewList = this.roomService.findRoomViews(streamer);
+		return viewList;
+	}
 
 	@GetMapping("/create")
 	public String create() {

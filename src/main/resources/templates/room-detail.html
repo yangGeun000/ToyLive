@@ -2,18 +2,28 @@
 
 <th:block layout:fragment="content">
 
-	<h2>[[${room.subject}]]</h2>
-	<video id="remoteVideo" autoplay></video>
-	<div id="sender">[[${#authentication.name}]]</div>
-	<div id="streamer">[[${room.streamer}]]</div>
-	<div id="chatView"></div>
-	<div class="mb-3">
-		<label for="msgContent" class="form-label">메세지</label>
-		<input type="text" id="msgContent" class="form-control" sec:authorize="isAuthenticated()">
-		<input type="text" id="msgContent" class="form-control" sec:authorize="isAnonymous()" value="로그인을 해야 사용가능합니다" disabled>
-	</div>
-	<button type="button" class="btn btn-primary" onclick="sendMessage()" sec:authorize="isAuthenticated()">보내기</button>
 
+	<h2>[[${room.subject}]]</h2>
+	<a class="btn btn-primary" href="/room/list" role="button">목록으로</a>
+	<div id="sender" class="d-none">[[${#authentication.name}]]</div>
+
+	<div class="d-flex">
+		<video id="remoteVideo" autoplay controls></video>
+		<div id="chat">
+			<label for="msgContent" class="form-label">채팅창</label>
+			<div class="d-flex" style="height: 80%;">
+				<div id="chatView" class="border"></div>
+			</div>
+			<div class="input-group mb-3">
+				<input type="text" id="msgContent" class="form-control" sec:authorize="isAuthenticated()">
+				<input type="text" id="msgContent" class="form-control" sec:authorize="isAnonymous()"
+					value="로그인을 해야 사용가능합니다" disabled>
+				<button type="button" class="btn btn-primary" onclick="sendMessage()"
+					sec:authorize="isAuthenticated()">보내기</button>
+			</div>
+		</div>
+	</div>
+	<div id="streamer">[[${room.streamer}]]</div>
 
 	<script th:src="@{/js/sockjs.min.js}"></script>
 	<script th:src="@{/js/stomp.min.js}"></script>
