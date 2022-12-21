@@ -38,7 +38,12 @@ function createPeer() {
 		console.log('Track Event: set stream to remote video element');
 		remoteVideo.srcObject = event.streams[0];
 	}
-
+	
+	peerConnection.onaddtrack = function(event) {
+		console.log('Track Event: replace stream to remote video element');
+		remoteVideo.srcObject = event.streams[0];
+	}
+	
 	peerConnection.onicecandidate = function(event) {
 		console.log("candidate send!!!");
 		if (event.candidate) {

@@ -3,7 +3,10 @@
 <th:block layout:fragment="content">
 
 
-	<h2>[[${room.subject}]]</h2>
+	<div class="mb-3">
+		<label for="username" class="form-label">방송제목</label>
+		<input type="text" name="subject" id="subject" class="form-control">
+	</div>
 	<a class="btn btn-primary" href="/room/list" role="button">목록으로</a>
 	<div id="sender" class="d-none">[[${#authentication.name}]]</div>
 

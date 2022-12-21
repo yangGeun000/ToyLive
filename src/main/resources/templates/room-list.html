@@ -1,23 +1,27 @@
 <html layout:decorate="~{layout}">
 
 <th:block layout:fragment="content">
-
-	<th:block th:each="room : ${roomList}">
-		<div class="card" style="width: 18rem;">
-			<div class="card-header">
-				[[${room.streamer}]]
+	<div type="button" class="btn btn-primary w-50 d-block" style="margin: 20px auto;">
+		방송목록 <span class="badge bg-secondary">[[${#lists.size(roomList)}]]</span>
+	</div>
+	<div class="d-flex flex-wrap flex-row">
+		<th:block th:each="room : ${roomList}">
+			<div class="card m-2" style="width: 18rem;">
+				<div class="card-header">
+					[[${room.streamer}]]
+				</div>
+				<!-- <img src="" class="card-img-top" alt="썸네일"> -->
+				<div class="card-body">
+					<h5 class="card-title">[[${room.subject}]]</h5>
+					<ul class="list-group list-group-flush text-end">
+						<li class="list-group-item">[[${room.count}]]명</li>
+						<li class="list-group-item">[[${#temporals.format(room.startDate,'dd일 HH:mm')}]]</li>
+						<a th:href="|/room/${room.streamer}|" class="btn btn-primary">방송보기</a>
+					</ul>
+				</div>
 			</div>
-			<img src="" class="card-img-top" alt="썸네일">
-			<div class="card-body">
-				<h5 class="card-title">[[${room.subject}]]</h5>
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item">시청자 : [[${room.count}]]명</li>
-					<li class="list-group-item">시작시간 : [[${#temporals.format(room.startDate,'dd일 HH:mm')}]]</li>
-				</ul>
-				<a th:href="|/room/${room.streamer}|" class="btn btn-primary">방송보기</a>
-			</div>
-		</div>
-	</th:block>
+		</th:block>
+	</div>
 
 </th:block>
 

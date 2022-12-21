@@ -62,6 +62,7 @@ public class RoomController {
 	@RequestMapping("/{streamer}")
 	public String getRoom(Model model, @PathVariable String streamer) {
 		Room room = this.roomService.findByStreamer(streamer);
+		if(room == null) return "redirect:/room/list";
 		model.addAttribute("room", room);
 		return "room-detail";
 	}
