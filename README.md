@@ -1,4 +1,4 @@
-# ToyLive
+# WebRTC 연습
 - bootstrap5
 - jquery 3.6.1
 - sockjs 1.0.2
